@@ -32,7 +32,37 @@ def analyze_category_field(data):
 
 # Get the category analysis
 category_analysis = analyze_category_field(data)
-
+'''
 # Output the analysis
+for line in category_analysis:
+    print(line)
+'''
+
+
+# Analyze the first element of the category field in each item
+def analyze_first_category_element(data):
+    results = []
+    for idx, entry in enumerate(data):
+        category = entry.get("category", [])  # Get category or default to an empty list
+
+        # Check if the first element of category is a dictionary
+        if isinstance(category, list) and len(category) > 0:
+            if isinstance(category[0], dict):
+                status = "It is a dictionary"
+            else:
+                status = "It is not a dictionary"
+        else:
+            status = "Category is not a valid list or is empty"
+
+        # Add the result for this entry
+        results.append(f"{idx}. {status}")
+
+    return results
+
+
+# Get the analysis of the first category element
+category_analysis = analyze_first_category_element(data)
+
+# Print the results
 for line in category_analysis:
     print(line)

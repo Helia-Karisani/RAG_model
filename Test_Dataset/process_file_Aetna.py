@@ -4,7 +4,6 @@ import json
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
-
 # Analyze the category field in each item
 def analyze_category_field(data):
     results = []

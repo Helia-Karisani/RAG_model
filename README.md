@@ -1,3 +1,3 @@
 # RAG_model
-#beginning
+# b
 Hello :)

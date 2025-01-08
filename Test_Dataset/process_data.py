@@ -7,7 +7,9 @@ import json
 #------ above lines should work
 
 # Load the provided JSON file
-with open("Aetna_Test_Data_Fixed.json", "r") as file:
+
+# Load the data file
+with open("Epic_Test_Data", "r") as file:
     data = json.load(file)
 # Define a dictionary for normal ranges of common medical variables
 # Updated to include variables mentioned in the JSON file

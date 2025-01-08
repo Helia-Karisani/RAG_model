@@ -5,11 +5,10 @@ import json
 
 #print("Environment is set up and libraries are working!")
 #------ above lines should work
-#done
+
 # Load the provided JSON file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
-#helia
 # Define a dictionary for normal ranges of common medical variables
 # Updated to include variables mentioned in the JSON file
 normal_ranges = {

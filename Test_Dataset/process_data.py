@@ -10,6 +10,8 @@ import json
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
+#hello
+
 # Define a dictionary for normal ranges of common medical variables
 # Updated to include variables mentioned in the JSON file
 normal_ranges = {

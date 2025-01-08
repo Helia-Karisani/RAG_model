@@ -5,42 +5,35 @@ with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
 
-# Extract health concerns and laboratory results
-def get_top_health_or_lab_result(data):
+# Analyze the category field in each item
+def analyze_category_field(data):
     results = []
-    for entry in data:
-        resource_type = entry.get("resourceType", "")
-        category = entry.get("category", None)  # Default to None if not present
+    for idx, entry in enumerate(data):
+        category = entry.get("category", None)  # Get category or None if not present
 
-        # Handle `category` safely, accounting for various formats
-        if isinstance(category, list) and len(category) > 0:  # Case 1: category is a list
-            category_display = category[0].get("coding", [{}])[0].get("display", "")
-        elif isinstance(category, dict):  # Case 2: category is a dictionary
-            category_display = category.get("coding", [{}])[0].get("display", "")
-        elif isinstance(category, str):  # Case 3: category is a string
-            category_display = category
-        else:  # Case 4: category is missing or invalid
-            category_display = ""
+        # Determine the type/status of the category
+        if isinstance(category, list) and len(category) > 0:
+            status = "It is a non-empty list"
+        elif isinstance(category, list) and len(category) == 0:
+            status = "It is an empty list"
+        elif isinstance(category, str) and category.strip() == "":
+            status = "It is an empty string"
+        elif isinstance(category, str):
+            status = "It is a string"
+        elif category is None:
+            status = "It is None"
+        else:
+            status = "Unknown type"
 
-        # Extract display name of the condition or lab result
-        code_info = entry.get("code", {}).get("coding", [{}])[0]
-        display_name = code_info.get("display", "Unknown Display")
+        # Add the result for this entry
+        results.append(f"{idx}. {status}")
 
-        # Check for health concerns or lab results
-        if resource_type in ["Condition", "DiagnosticReport"] and category_display in ["Health Concern", "Laboratory"]:
-            results.append({
-                "name": display_name,
-                "lastUpdated": entry.get("meta", {}).get("lastUpdated", ""),
-                "category": category_display
-            })
-
-    # Sort by last updated date and return the top result's name
-    if results:
-        results.sort(key=lambda x: x["lastUpdated"], reverse=True)
-        return results[0]["name"]
-    return "No valid health concern or laboratory result found"
+    return results
 
 
-# Get the top health concern or laboratory result
-top_result = get_top_health_or_lab_result(data)
-print("Top Result:", top_result)
+# Get the category analysis
+category_analysis = analyze_category_field(data)
+
+# Output the analysis
+for line in category_analysis:
+    print(line)

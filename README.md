@@ -1,2 +1,1 @@
-# RAG_model
-Hello :)
+Refer to "master" branch.

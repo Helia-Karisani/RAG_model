@@ -1,76 +1,62 @@
 import json
+from transformers import pipeline
 import pandas as pd
 
+# Initialize the AI pipeline
+try:
+    classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
+except Exception as e:
+    print(f"Error loading pipeline: {e}")
+    exit()
 
 # Load the data file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
-# Evaluate importance for items without a range
-def evaluate_importance(display_name):
-    critical_terms = [
-        "Acute", "Severe", "Critical", "Failure", "High", "Low", "Cancer", "Infarction",
-        "Blood Pressure", "Heart Rate", "Glucose", "Oxygen Saturation", "Liver Enzymes",
-        "Cholesterol", "Thyroid", "Creatinine"
-    ]
-    for term in critical_terms:
-        if term.lower() in display_name.lower():
-            return True
-    return display_name != "Unknown Display"  # Fallback: mark as important if display_name is not empty
-
-# Print all relevant health information
-def print_health_information(data):
+# Function to process health information
+def process_health_information_with_ai(data):
     for idx, entry in enumerate(data):
-        # Safely access category
+        # Extract category
         category = entry.get("category", [])
+        category_display = ""
         if isinstance(category, list) and len(category) > 0:
             first_category = category[0]
             if isinstance(first_category, dict):
                 coding = first_category.get("coding", [])
                 if isinstance(coding, list) and len(coding) > 0:
                     first_coding = coding[0]
-                    category_display = first_coding.get("display", "")
-                else:
-                    category_display = ""
-            else:
-                category_display = ""
-        else:
-            category_display = ""
-
-        # Safely access clinicalStatus
-        clinical_status = entry.get("clinicalStatus", {}).get("coding", [{}])[0].get("code", "")
+                    if isinstance(first_coding, dict):
+                        category_display = first_coding.get("display", "")
 
         # Extract display name
-        code_info = entry.get("code", {}).get("coding", [{}])[0]
-        display_name = code_info.get("display", "Unknown Display")
+        display_name = entry.get("display", "Unknown")
 
-        # Check if value is out of range
-        value = entry.get("valueQuantity", {}).get("value", None)
-        reference_range = entry.get("referenceRange", [])
-        out_of_range = False
-        if value is not None and isinstance(reference_range, list) and len(reference_range) > 0:
-            low = reference_range[0].get("low", {}).get("value", None)
-            high = reference_range[0].get("high", {}).get("value", None)
-            if (low is not None and value < low) or (high is not None and value > high):
-                out_of_range = True
+        # Skip if display_name is empty
+        if not display_name:
+            continue
 
-        # Evaluate items without a range
-        evaluated_as_important = False
-        if not out_of_range and len(reference_range) == 0:  # No range provided
-            evaluated_as_important = evaluate_importance(display_name)
+        # Analyze with AI model
+        try:
+            prediction = classifier(display_name)
+            is_important = "No"
+            if prediction and len(prediction) > 0:
+                label = prediction[0].get("label", "")
+                if label == "LABEL_1":  # Assuming LABEL_1 corresponds to importance
+                    is_important = "Yes"
 
-        # Print relevant information for Health Concern or Laboratory
-        if category_display in ["Health Concern", "Laboratory"]:
+            # Print results
             print(f"Item {idx}:")
             print(f"  Category: {category_display}")
             print(f"  Display Name: {display_name}")
-            if category_display == "Laboratory":
-                print(f"  Out of Range: {'Yes' if out_of_range else 'No'}")
-            print(f"  Evaluated as Important: {'Yes' if evaluated_as_important else 'No'}")
+            print(f"  Evaluated as Important: {is_important} (AI)")
             print()
 
+        except Exception as e:
+            print(f"Error processing item {idx}: {e}")
+
 # Run the function
-print_health_information(data)
+process_health_information_with_ai(data)
+
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

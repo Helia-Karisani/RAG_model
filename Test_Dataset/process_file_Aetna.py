@@ -4,60 +4,64 @@ import json
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
-# Extract top health concerns or laboratory results
-def get_top_10_items(data):
+
+# Function to debug the exact condition
+def debug_exact_condition(data):
     results = []
-    seen_items = set()  # To avoid repetitions
 
     for idx, entry in enumerate(data):
-        category = entry.get("category", [])  # Get category or default to an empty list
-
-        # Safely extract the display field from category
-        if isinstance(category, list) and len(category) > 0:  # Ensure category is a non-empty list
+        # Step 1: Check category.display
+        category = entry.get("category", [])
+        if isinstance(category, list) and len(category) > 0:
             first_category = category[0]
-            if isinstance(first_category, dict):  # Ensure the first element is a dictionary
+            if isinstance(first_category, dict):
                 coding = first_category.get("coding", [])
-                if isinstance(coding, list) and len(coding) > 0:  # Ensure "coding" is a non-empty list
+                if isinstance(coding, list) and len(coding) > 0:
                     first_coding = coding[0]
-                    if isinstance(first_coding, dict):  # Ensure the first element of "coding" is a dictionary
+                    if isinstance(first_coding, dict):
                         category_display = first_coding.get("display", "")
                     else:
-                        category_display = ""  # Default if "coding[0]" is not a dictionary
+                        category_display = ""
                 else:
-                    category_display = ""  # Default if "coding" is not a valid list
+                    category_display = ""
             else:
-                category_display = ""  # Default if "category[0]" is not a dictionary
+                category_display = ""
         else:
-            category_display = ""  # Default if "category" is not a valid list
+            category_display = ""
 
-        # Extract display name of the condition or lab result
-        code_info = entry.get("code", {}).get("coding", [{}])[0]
-        display_name = code_info.get("display", "Unknown Display")
+        # Step 2: Check clinicalStatus for Health Concerns
+        clinical_status = entry.get("clinicalStatus", {}).get("coding", [{}])[0].get("code", "")
 
-        # Check for health concerns or lab results and avoid duplicates
-        if category_display in ["Health Concern", "Laboratory"] and display_name not in seen_items:
-            results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
-            seen_items.add(display_name)
+        # Step 3: Check valueQuantity for Laboratory Results
+        value = entry.get("valueQuantity", {}).get("value", None)
+        reference_range = entry.get("referenceRange", [])
+        out_of_range = False
+        if value is not None and isinstance(reference_range, list) and len(reference_range) > 0:
+            low = reference_range[0].get("low", {}).get("value", None)
+            high = reference_range[0].get("high", {}).get("value", None)
+            if (low is not None and value < low) or (high is not None and value > high):
+                out_of_range = True
 
-    # Sort by last updated date and limit to top 10
-    results.sort(key=lambda x: x[1], reverse=True)  # Sort by lastUpdated timestamp
-    top_10_items = [item[0] for item in results[:10]]  # Extract only the item numbers
+        # Debugging outputs
+        print(f"\nProcessing item {idx}:")
+        print(f"  Category Display: {category_display}")
+        print(f"  Clinical Status: {clinical_status}")
+        print(f"  Out of Range: {out_of_range}")
 
-    return top_10_items
+        # Match the conditions from the original code
+        if category_display == "Health Concern" and clinical_status in ["active", "recurrence"]:
+            results.append(idx)
+        elif category_display == "Laboratory" and out_of_range:
+            results.append(idx)
 
-# Get the top 10 item numbers
-top_10_item_numbers = get_top_10_items(data)
+    # Print the results
+    if results:
+        print(f"\nItems meeting the exact condition: {results}")
+    else:
+        print("\nNo items met the exact condition.")
 
-# Print only the item numbers
-for item_number in top_10_item_numbers:
-    print(item_number)
-
-
-
-
-
-
-
+# Run the function
+debug_exact_condition(data)
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

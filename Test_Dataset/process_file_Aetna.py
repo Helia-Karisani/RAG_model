@@ -56,16 +56,8 @@ def find_top_items(data):
         if not out_of_range and len(reference_range) == 0:  # No range provided
             evaluated_as_important = evaluate_importance(display_name)
 
-        # Debugging: Print details of the current item
-        print(f"\nProcessing item {idx}:")
-        print(f"  Category Display: {category_display}")
-        print(f"  Clinical Status: {clinical_status}")
-        print(f"  Display Name: {display_name}")
-        print(f"  Out of Range: {out_of_range}")
-        print(f"  Evaluated as Important: {evaluated_as_important}")
-
         # Add to results based on conditions
-        if category_display == "Health Concern" and clinical_status in ["active", "recurrence"]:
+        if category_display == "Health Concern" and (clinical_status in ["active", "recurrence"] or evaluated_as_important):
             results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
             seen_items.add(display_name)
         elif category_display == "Laboratory" and (out_of_range or evaluated_as_important):

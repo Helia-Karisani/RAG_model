@@ -1,4 +1,6 @@
 import json
+import pandas as pd
+
 
 # Load the data file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
@@ -6,17 +8,18 @@ with open("Aetna_Test_Data_Fixed.json", "r") as file:
 
 # Evaluate importance for items without a range
 def evaluate_importance(display_name):
-    critical_terms = ["Acute", "Severe", "Critical", "Failure", "High", "Low", "Cancer", "Infarction"]
+    critical_terms = [
+        "Acute", "Severe", "Critical", "Failure", "High", "Low", "Cancer", "Infarction",
+        "Blood Pressure", "Heart Rate", "Glucose", "Oxygen Saturation", "Liver Enzymes",
+        "Cholesterol", "Thyroid", "Creatinine"
+    ]
     for term in critical_terms:
         if term.lower() in display_name.lower():
             return True
-    return False
+    return display_name != "Unknown Display"  # Fallback: mark as important if display_name is not empty
 
-# Find items meeting the conditions
-def find_top_items(data):
-    results = []
-    seen_items = set()  # To avoid repetitions
-
+# Print all relevant health information
+def print_health_information(data):
     for idx, entry in enumerate(data):
         # Safely access category
         category = entry.get("category", [])
@@ -56,27 +59,18 @@ def find_top_items(data):
         if not out_of_range and len(reference_range) == 0:  # No range provided
             evaluated_as_important = evaluate_importance(display_name)
 
-        # Add to results based on conditions
-        if category_display == "Health Concern" and (clinical_status in ["active", "recurrence"] or evaluated_as_important):
-            results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
-            seen_items.add(display_name)
-        elif category_display == "Laboratory" and (out_of_range or evaluated_as_important):
-            results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
-            seen_items.add(display_name)
+        # Print relevant information for Health Concern or Laboratory
+        if category_display in ["Health Concern", "Laboratory"]:
+            print(f"Item {idx}:")
+            print(f"  Category: {category_display}")
+            print(f"  Display Name: {display_name}")
+            if category_display == "Laboratory":
+                print(f"  Out of Range: {'Yes' if out_of_range else 'No'}")
+            print(f"  Evaluated as Important: {'Yes' if evaluated_as_important else 'No'}")
+            print()
 
-    # Sort by last updated date and limit to top 10
-    results.sort(key=lambda x: x[1], reverse=True)  # Sort by lastUpdated timestamp
-    top_10_items = [item[0] for item in results[:10]]  # Extract only the item numbers
-
-    return top_10_items
-
-# Get the top 10 item numbers
-top_10_item_numbers = find_top_items(data)
-
-# Print only the item numbers
-print("\nTop 10 Item Numbers:")
-for item_number in top_10_item_numbers:
-    print(item_number)
+# Run the function
+print_health_information(data)
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

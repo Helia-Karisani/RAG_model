@@ -4,13 +4,21 @@ import json
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
+# Evaluate importance for items without a range
+def evaluate_importance(display_name):
+    critical_terms = ["Acute", "Severe", "Critical", "Failure", "High", "Low", "Cancer", "Infarction"]
+    for term in critical_terms:
+        if term.lower() in display_name.lower():
+            return True
+    return False
 
-# Function to debug the exact condition
-def debug_exact_condition(data):
+# Find items meeting the conditions
+def find_top_items(data):
     results = []
+    seen_items = set()  # To avoid repetitions
 
     for idx, entry in enumerate(data):
-        # Step 1: Check category.display
+        # Safely access category
         category = entry.get("category", [])
         if isinstance(category, list) and len(category) > 0:
             first_category = category[0]
@@ -18,10 +26,7 @@ def debug_exact_condition(data):
                 coding = first_category.get("coding", [])
                 if isinstance(coding, list) and len(coding) > 0:
                     first_coding = coding[0]
-                    if isinstance(first_coding, dict):
-                        category_display = first_coding.get("display", "")
-                    else:
-                        category_display = ""
+                    category_display = first_coding.get("display", "")
                 else:
                     category_display = ""
             else:
@@ -29,10 +34,14 @@ def debug_exact_condition(data):
         else:
             category_display = ""
 
-        # Step 2: Check clinicalStatus for Health Concerns
+        # Safely access clinicalStatus
         clinical_status = entry.get("clinicalStatus", {}).get("coding", [{}])[0].get("code", "")
 
-        # Step 3: Check valueQuantity for Laboratory Results
+        # Extract display name
+        code_info = entry.get("code", {}).get("coding", [{}])[0]
+        display_name = code_info.get("display", "Unknown Display")
+
+        # Check if value is out of range
         value = entry.get("valueQuantity", {}).get("value", None)
         reference_range = entry.get("referenceRange", [])
         out_of_range = False
@@ -42,26 +51,40 @@ def debug_exact_condition(data):
             if (low is not None and value < low) or (high is not None and value > high):
                 out_of_range = True
 
-        # Debugging outputs
+        # Evaluate items without a range
+        evaluated_as_important = False
+        if not out_of_range and len(reference_range) == 0:  # No range provided
+            evaluated_as_important = evaluate_importance(display_name)
+
+        # Debugging: Print details of the current item
         print(f"\nProcessing item {idx}:")
         print(f"  Category Display: {category_display}")
         print(f"  Clinical Status: {clinical_status}")
+        print(f"  Display Name: {display_name}")
         print(f"  Out of Range: {out_of_range}")
+        print(f"  Evaluated as Important: {evaluated_as_important}")
 
-        # Match the conditions from the original code
+        # Add to results based on conditions
         if category_display == "Health Concern" and clinical_status in ["active", "recurrence"]:
-            results.append(idx)
-        elif category_display == "Laboratory" and out_of_range:
-            results.append(idx)
+            results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
+            seen_items.add(display_name)
+        elif category_display == "Laboratory" and (out_of_range or evaluated_as_important):
+            results.append((idx, entry.get("meta", {}).get("lastUpdated", ""), display_name))
+            seen_items.add(display_name)
 
-    # Print the results
-    if results:
-        print(f"\nItems meeting the exact condition: {results}")
-    else:
-        print("\nNo items met the exact condition.")
+    # Sort by last updated date and limit to top 10
+    results.sort(key=lambda x: x[1], reverse=True)  # Sort by lastUpdated timestamp
+    top_10_items = [item[0] for item in results[:10]]  # Extract only the item numbers
 
-# Run the function
-debug_exact_condition(data)
+    return top_10_items
+
+# Get the top 10 item numbers
+top_10_item_numbers = find_top_items(data)
+
+# Print only the item numbers
+print("\nTop 10 Item Numbers:")
+for item_number in top_10_item_numbers:
+    print(item_number)
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

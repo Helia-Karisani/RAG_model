@@ -1,4 +1,3 @@
-import json
 # For FHIR data handling
 from fhir.resources.patient import Patient  # Example: Work with Patient resources
 from fhir.resources.observation import Observation  # Example: Work with Observation resources
@@ -20,67 +19,12 @@ from transformers import pipeline  # Text-generation and classification
 # Standard Python imports (if applicable)
 import json  # For loading and saving JSON
 import os  # To handle file paths
-from transformers import pipeline
 import pandas as pd
 
-# Initialize the AI pipeline
-try:
-    classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
-except Exception as e:
-    print(f"Error loading pipeline: {e}")
-    exit()
-
-# Load the data file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
-
-# Function to process health information
-def process_health_information(data):
-    for idx, entry in enumerate(data):
-        # Extract category
-        category = entry.get("category", [])
-        category_display = ""
-        if isinstance(category, list) and len(category) > 0:
-            first_category = category[0]
-            if isinstance(first_category, dict):
-                coding = first_category.get("coding", [])
-                if isinstance(coding, list) and len(coding) > 0:
-                    first_coding = coding[0]
-                    if isinstance(first_coding, dict):
-                        category_display = first_coding.get("display", "Unknown")
-
-        # Extract display name
-        display_name = entry.get("display", "Unknown")
-
-        # Extract out-of-range information
-        out_of_range = entry.get("outOfRange", False)
-
-        # Skip items where both category and display name are missing
-        if not category_display and display_name == "Unknown":
-            continue
-
-        # Analyze with AI model for importance
-        is_important = "No"
-        if display_name != "Unknown":
-            try:
-                prediction = classifier(display_name)
-                if prediction and len(prediction) > 0:
-                    label = prediction[0].get("label", "")
-                    if label == "LABEL_1":  # Assuming LABEL_1 corresponds to importance
-                        is_important = "Yes"
-            except Exception as e:
-                print(f"Error processing item {idx}: {e}")
-
-        # Print results
-        print(f"Item {idx}:")
-        print(f"  Category: {category_display if category_display else 'Unknown'}")
-        print(f"  Display Name: {display_name}")
-        print(f"  Out of Range: {'Yes' if out_of_range else 'No'}")
-        print(f"  Evaluated as Important: {is_important} (AI)")
-        print()
-
-# Run the function
-process_health_information(data)
+    print(data)  # Check what the structure looks like
+print("hello")
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

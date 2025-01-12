@@ -21,10 +21,19 @@ import json  # For loading and saving JSON
 import os  # To handle file paths
 import pandas as pd
 
+# Load the JSON file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
-    print(data)  # Check what the structure looks like
-print("hello")
+
+# Iterate through each item in the data
+for index, item in enumerate(data):
+    print(f"Item {index + 1}:")
+    if isinstance(item, dict):
+        for key, value in item.items():
+            print(f"  {key}: {value}")
+    else:
+        print("  This item is not a dictionary.")
+    print()  # Add a blank line between items
 #------------------------------------------------------------------------------------
 # Analyze the category field in each item
 def analyze_category_field(data):

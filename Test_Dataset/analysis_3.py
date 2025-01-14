@@ -24,39 +24,38 @@ if __name__ == "__main__":
             "Time": patient.get("meta", {}).get("lastUpdated", "No time available")
         }
 
-    def parse_condition(condition):
+    def parse_condition(condition, patient_id):
         return {
-            "id": condition.get("id"),
+            "patient_id": patient_id,
             "diagnosis": condition.get("code", {}).get("coding", [{}])[0].get("display"),
             "category": ", ".join([c.get("coding", [{}])[0].get("display", "") for c in condition.get("category", [])]),
-            "Time": condition.get("recordedDate", "No time available")
+            #"Time": condition.get("recordedDate", "No time available")
+            "Time": condition.get("meta", {}).get("lastUpdated", "No time available")
         }
 
-    # Process the data and organize by resource type
-    parsed_data = {
-        "Patient": [],
-        "Condition": []
-    }
-
+    # Find the single patient in the data
+    patient_data = None
+    conditions_data = []
     for entry in data:
         resource_type = entry.get("resourceType")
         if resource_type == "Patient":
-            parsed_data["Patient"].append(parse_patient(entry))
-        elif resource_type == "Condition":
-            parsed_data["Condition"].append(parse_condition(entry))
+            patient_data = parse_patient(entry)
+        elif resource_type == "Condition" and patient_data:
+            conditions_data.append(parse_condition(entry, patient_data["id"]))
+
+    if not patient_data:
+        print("No patient data found in the JSON.")
+        exit()
 
     # Extract insights
-    def extract_insights(parsed_data):
+    def extract_insights(patient, conditions):
         insights = []
-        for resource_type, entries in parsed_data.items():
-            for entry in entries:
-                if resource_type == "Condition":
-                    insights.append(f"Patient {entry['id']} diagnosed with {entry['diagnosis']} under category {entry['category']} on {entry['Time']}.")
-                elif resource_type == "Patient":
-                    insights.append(f"Patient {entry['id']} details: {entry['name']}, {entry['gender']}, {entry['birthDate']}, residing at {entry['address']}.")
+        insights.append(f"Patient {patient['id']} details: {patient['name']}, {patient['gender']}, {patient['birthDate']}, residing at {patient['address']}.")
+        for condition in conditions:
+            insights.append(f"Patient diagnosed with {condition['diagnosis']} under category {condition['category']} on {condition['Time']}.")
         return insights
 
-    insights = extract_insights(parsed_data)
+    insights = extract_insights(patient_data, conditions_data)
 
     # Summarization
     summary_pipeline = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")

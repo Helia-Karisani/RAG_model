@@ -27,7 +27,7 @@ with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
 # Prepare the CSV output
-csv_output_path = '/mnt/data/output.csv'
+csv_output_path = 'resources.csv'
 
 # Extract the required information and write to CSV
 with open(csv_output_path, 'w', newline='', encoding='utf-8') as csv_file:

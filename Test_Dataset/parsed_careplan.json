@@ -1,0 +1,26 @@
+[
+    {
+        "id": "6f59805d-9bd2-75c3-276c-b7d4e08d1455",
+        "description": "Placeholder Description",
+        "activities": [
+            "Dressing change management",
+            "Behavior to prevent infection"
+        ]
+    },
+    {
+        "id": "c5bb0c7a-e35b-e8a3-2642-d1f107459e81",
+        "description": "Placeholder Description",
+        "activities": [
+            "Recommendation to avoid exercise",
+            "Deep breathing and coughing exercises"
+        ]
+    },
+    {
+        "id": "9e041978-4a64-c31e-98bd-b49b8b84ebc6",
+        "description": "Placeholder Description",
+        "activities": [
+            "Joint mobility exercises",
+            "Heat therapy"
+        ]
+    }
+]

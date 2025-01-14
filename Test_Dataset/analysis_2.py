@@ -20,6 +20,7 @@ from transformers import pipeline  # Text-generation and classification
 import os  # To handle file paths
 import pandas as pd
 import json
+import csv
 
 # Load the JSON file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
@@ -40,23 +41,23 @@ def parse_condition(condition):
         "id": condition.get("id"),
         "diagnosis": condition.get("code", {}).get("coding", [{}])[0].get("display"),
         "status": condition.get("clinicalStatus", {}).get("coding", [{}])[0].get("code"),
-        "category": [c.get("coding", [{}])[0].get("display") for c in condition.get("category", [])],
+        "category": ", ".join([c.get("coding", [{}])[0].get("display", "") for c in condition.get("category", [])]),
     }
 
 def parse_careplan(careplan):
     return {
         "id": careplan.get("id"),
         "description": careplan.get("description"),
-        "activities": [
+        "activities": ", ".join([
             act["detail"]["code"]["coding"][0]["display"]
             for act in careplan.get("activity", [])
-        ],
+        ]),
     }
 
 def parse_diagnosticreport(report):
     return {
         "id": report.get("id"),
-        "tests": [result.get("display") for result in report.get("result", [])],
+        "tests": ", ".join([result.get("display", "") for result in report.get("result", [])]),
         "status": report.get("status"),
         "issued": report.get("issued"),
     }
@@ -80,12 +81,15 @@ for entry in data:
     elif resource_type == "DiagnosticReport":
         parsed_data["DiagnosticReport"].append(parse_diagnosticreport(entry))
 
-# Save the parsed data to separate JSON files
+# Save parsed data to CSV files
 output_files = {}
 for resource_type, entries in parsed_data.items():
-    output_path = f'/mnt/data/parsed_{resource_type.lower()}.json'
-    with open(output_path, 'w') as output_file:
-        json.dump(entries, output_file, indent=4)
-    output_files[resource_type] = output_path
+    if entries:  # Only create a CSV file if there are entries for this type
+        output_path = f'parsed_{resource_type.lower()}.csv'
+        with open(output_path, 'w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=entries[0].keys())
+            writer.writeheader()
+            writer.writerows(entries)
+        output_files[resource_type] = output_path
 
 output_files

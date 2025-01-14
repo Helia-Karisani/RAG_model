@@ -1,16 +1,16 @@
-id,diagnosis,status,category
-9b49ff50-9b8f-0730-0cc5-2a6557a882f2,Acute bronchitis (disorder),,Health Concern
-22b6c030-575b-edf2-2df5-ce38e2b1a771,Stress (finding),,Health Concern
-1a26b593-0e55-497d-8469-ebeddb433317,Stress (finding),,Health Concern
-47ffcb8d-f6af-b0d6-def8-a90629cbdfd1,Full-time employment (finding),,Health Concern
-9012f3a4-7e9c-5614-8ef8-0538c02e2180,Full-time employment (finding),,Health Concern
-581b6ac6-e9a5-02ac-6f45-9904d502e4eb,Full-time employment (finding),,Health Concern
-cd9c525c-99e3-790a-35aa-3eb2864e7c84,Full-time employment (finding),,Health Concern
-a6a369b3-d0d4-a9fb-2258-e31a6e1f0158,Full-time employment (finding),,Health Concern
-9d841450-7a24-c2f8-672e-c67452cfe808,Body mass index 30+ - obesity (finding),,Health Concern
-bf55cd82-7015-2492-709d-773302894316,"Localized, primary osteoarthritis of the hand",,Health Concern
-ac3059d1-e60b-95ec-bff1-7737ed21ce4e,Laceration of hand,,Health Concern
-0afded38-aa12-92eb-1545-35763ea96d18,Social isolation (finding),,Health Concern
-2a0ea1ca-ca80-a464-71d8-1085ad734f04,Viral sinusitis (disorder),,Health Concern
-ca304daf-7e53-90aa-9af0-eb608dead479,Not in labor force (finding),,Health Concern
-cbfc4e11-4099-348d-0a51-d5ca92ee99a8,Not in labor force (finding),,Health Concern
+id,diagnosis,category,Time
+9b49ff50-9b8f-0730-0cc5-2a6557a882f2,Acute bronchitis (disorder),Health Concern,No time available
+22b6c030-575b-edf2-2df5-ce38e2b1a771,Stress (finding),Health Concern,No time available
+1a26b593-0e55-497d-8469-ebeddb433317,Stress (finding),Health Concern,No time available
+47ffcb8d-f6af-b0d6-def8-a90629cbdfd1,Full-time employment (finding),Health Concern,No time available
+9012f3a4-7e9c-5614-8ef8-0538c02e2180,Full-time employment (finding),Health Concern,No time available
+581b6ac6-e9a5-02ac-6f45-9904d502e4eb,Full-time employment (finding),Health Concern,No time available
+cd9c525c-99e3-790a-35aa-3eb2864e7c84,Full-time employment (finding),Health Concern,No time available
+a6a369b3-d0d4-a9fb-2258-e31a6e1f0158,Full-time employment (finding),Health Concern,No time available
+9d841450-7a24-c2f8-672e-c67452cfe808,Body mass index 30+ - obesity (finding),Health Concern,No time available
+bf55cd82-7015-2492-709d-773302894316,"Localized, primary osteoarthritis of the hand",Health Concern,No time available
+ac3059d1-e60b-95ec-bff1-7737ed21ce4e,Laceration of hand,Health Concern,No time available
+0afded38-aa12-92eb-1545-35763ea96d18,Social isolation (finding),Health Concern,No time available
+2a0ea1ca-ca80-a464-71d8-1085ad734f04,Viral sinusitis (disorder),Health Concern,No time available
+ca304daf-7e53-90aa-9af0-eb608dead479,Not in labor force (finding),Health Concern,No time available
+cbfc4e11-4099-348d-0a51-d5ca92ee99a8,Not in labor force (finding),Health Concern,No time available

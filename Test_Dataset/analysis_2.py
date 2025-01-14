@@ -20,13 +20,14 @@ from transformers import pipeline  # Text-generation and classification
 import os  # To handle file paths
 import pandas as pd
 import json
+import base64
 import csv
 
 # Load the JSON file
 with open("Aetna_Test_Data_Fixed.json", "r") as file:
     data = json.load(file)
 
-# Define parsing functions for different resource types
+# Update parsing functions to include the specific time when the diagnosis was found
 def parse_patient(patient):
     return {
         "id": patient.get("id"),
@@ -34,14 +35,15 @@ def parse_patient(patient):
         "gender": patient.get("gender"),
         "birthDate": patient.get("birthDate"),
         "address": patient.get("address", [{}])[0].get("text"),
+        "Time": patient.get("meta", {}).get("lastUpdated", "No time available")
     }
 
 def parse_condition(condition):
     return {
         "id": condition.get("id"),
         "diagnosis": condition.get("code", {}).get("coding", [{}])[0].get("display"),
-        "status": condition.get("clinicalStatus", {}).get("coding", [{}])[0].get("code"),
         "category": ", ".join([c.get("coding", [{}])[0].get("display", "") for c in condition.get("category", [])]),
+        "Time": condition.get("recordedDate", "No time available")
     }
 
 def parse_careplan(careplan):
@@ -52,14 +54,22 @@ def parse_careplan(careplan):
             act["detail"]["code"]["coding"][0]["display"]
             for act in careplan.get("activity", [])
         ]),
+        "Time": careplan.get("created", "No time available")
     }
 
 def parse_diagnosticreport(report):
+    encoded_data = report.get("presentedForm", [{}])[0].get("data", "")
+    try:
+        decoded_data = base64.b64decode(encoded_data).decode("utf-8")
+    except (ValueError, UnicodeDecodeError):
+        decoded_data = "Unable to decode data"
+
     return {
         "id": report.get("id"),
         "tests": ", ".join([result.get("display", "") for result in report.get("result", [])]),
-        "status": report.get("status"),
-        "issued": report.get("issued"),
+        #"issued": report.get("issued"),
+        "data": decoded_data,
+        "Time": report.get("effectiveDateTime", "No time available")
     }
 
 # Process the data and organize by resource type

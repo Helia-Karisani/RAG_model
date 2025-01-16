@@ -44,5 +44,4 @@ First, initialize an empty Git repository in the project directory:
 ```bash
 git init
 
-
-
+Expected output:

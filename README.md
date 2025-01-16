@@ -36,10 +36,7 @@ This guide details the steps followed to deploy the `app.py` Flask application t
 
 ## Steps to Deploy the Flask App
 
-### 1. Initialize a Git Repository
-Run the following commands in your project directory to initialize the Git repository:
-```bash
-git init
+
 
 ### 2. Add and Commit Project Files
 

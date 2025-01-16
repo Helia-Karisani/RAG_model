@@ -27,3 +27,18 @@ To run the main script that provides outputs on the website:
 1. Ensure all required libraries are installed.
 2. Execute the `app.py` file.
 
+
+# Deployment Instructions for `helia-patient-portal`
+
+This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online.
+
+---
+
+## Steps to Deploy the Flask App
+
+### 1. Initialize a Git Repository
+Run the following commands in your project directory to initialize the Git repository:
+```bash
+git init
+
+

@@ -45,20 +45,5 @@ git init
 
 Add all project files (e.g., `app.py`, `Procfile`, `requirements.txt`, templates, and static files) to the Git staging area and commit the changes.
 
-#### Commands:
-```bash
-git add .
-git commit -m "Initial commit with Flask app"
 
-After running these commands, your project structure might look like this:
-
-plaintext
-Copy
-Edit
-Procfile
-app.py
-requirements.txt
-static/style.css
-templates/index.html
-templates/results.html
 

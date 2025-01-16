@@ -151,7 +151,7 @@ Use the Render dashboard to monitor the build and deployment process. For exampl
 
 ### 9. Access the Application
 Once deployed, access the application at the provided URL. Example:
-- **Current Website**: [Patient Portal - Render](https://helia-patient-portal.onrender.com)(#)
+- **Current Website**: [Patient Portal](https://helia-patient-portal.onrender.com)
 
 ---
 

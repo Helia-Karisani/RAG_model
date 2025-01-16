@@ -1,4 +1,4 @@
-# RAG_mode and Medical Data Processing and Output Project
+# RAG model and Medical Data Processing and Output Project
 
 This project is designed to process JSON files and provide outputs through a website. Below is an overview of the project structure and execution instructions.
 

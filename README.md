@@ -1,6 +1,7 @@
 # RAG model and Medical Data Processing and Output Project
 
-This project is designed to process JSON files and provide outputs through a website. Below is an overview of the project structure and execution instructions.
+This project is designed to process JSON files and provide outputs through a website. Below is an overview of the project structure and execution instructions. 
+Notice: The originally privided JSON files, had errors, so please use the JSON files in this the project.
 
 ## Features
 - **Replication:** Generate outputs similar to the original data.

@@ -43,7 +43,6 @@ git init
 
 ### 2. Add and Commit Project Files
 
-Add all project files (e.g., `app.py`, `Procfile`, `requirements.txt`, templates, and static files) to the Git staging area and commit the changes.
 
 
 

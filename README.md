@@ -33,13 +33,16 @@ To run the main script that provides outputs on the website:
 This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online.
 
 ---
+# Steps to Deploy and Run `app.py` on the Website
 
-## Steps to Deploy the Flask App
+This guide outlines all the steps required to deploy the `app.py` Flask application on a hosting service (e.g., Render) and make it accessible online.
 
+---
 
-
-### 2. Add and Commit Project Files
-
+## 1. Initialize a Git Repository
+First, initialize an empty Git repository in the project directory:
+```bash
+git init
 
 
 

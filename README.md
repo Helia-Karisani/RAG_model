@@ -11,7 +11,7 @@ This project is designed to process JSON files and provide outputs through a web
 
 ## Important Links
 - Future website for additional functionality and data outputs: [Patient Portal - Builder Preview](https://patient-portal-yrdq1xv3y4hn074m.builder-preview.com/)
-- Current website for uploading patient JSON data and receiving summarized patient information: [Patient Portal - Render](https://helia-patient-portal.onrender.com/upload)
+- Current website for uploading patient JSON data and receiving summarized patient information: [Patient Portal - Render](https://helia-patient-portal.onrender.com)
 
 ## Main Project Files
 - **`app.py`:** The primary script that runs the project and displays data on the website. This file is also available on GitHub.

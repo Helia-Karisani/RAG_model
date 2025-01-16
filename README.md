@@ -35,7 +35,7 @@ This guide details the steps followed to deploy the `app.py` Flask application t
 ---
 # Deployment Instructions for `helia-patient-portal`
 
-This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online.
+This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online. For the deployment please refer to the files in the followint repo: https://github.com/Helia-Karisani/helia-patient-portal
 
 ---
 

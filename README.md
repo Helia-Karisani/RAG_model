@@ -33,15 +33,133 @@ To run the main script that provides outputs on the website:
 This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online.
 
 ---
-# Steps to Deploy and Run `app.py` on the Website
+# Deployment Instructions for `helia-patient-portal`
 
-This guide outlines all the steps required to deploy the `app.py` Flask application on a hosting service (e.g., Render) and make it accessible online.
+This guide details the steps followed to deploy the `app.py` Flask application to a hosting service (e.g., Render) and make it accessible online.
 
 ---
 
-## 1. Initialize a Git Repository
-First, initialize an empty Git repository in the project directory:
+## Steps to Deploy the Flask App
+
+### 1. Initialize a Git Repository
+Run the following commands in your project directory to initialize the Git repository:
 ```bash
 git init
+```
+This creates an empty Git repository.
 
-Expected output:
+---
+
+### 2. Add and Commit Project Files
+Add all project files (e.g., `app.py`, `Procfile`, `requirements.txt`, templates, and static files) to the Git staging area and commit the changes:
+```bash
+git add .
+git commit -m "Initial commit with Flask app"
+```
+
+After this, the project structure might look like:
+```
+Procfile
+app.py
+requirements.txt
+static/style.css
+templates/index.html
+templates/results.html
+```
+
+---
+
+### 3. Set Up the Remote Repository on GitHub
+Connect the local repository to a GitHub repository:
+```bash
+git branch -M main
+git remote add origin https://github.com/Helia-Karisani/helia-patient-portal.git
+git push -u origin main
+```
+
+---
+
+### 4. Update the Code and Add More Features
+For subsequent changes (e.g., adding pages or fixing bugs), follow these steps:
+- Add new files or make edits.
+- Stage and commit the changes:
+  ```bash
+  git add .
+  git commit -m "Description of the change"
+  ```
+- Push the changes to GitHub:
+  ```bash
+  git push -u origin main
+  ```
+
+Example commits:
+- Adding new pages:
+  ```bash
+  git commit -m "Adding more pages to patient portal"
+  ```
+- Fixing box sizes:
+  ```bash
+  git commit -m "box size fix"
+  ```
+- Updating text:
+  ```bash
+  git commit -m "md text fix"
+  ```
+
+---
+
+### 5. Create a Procfile
+The `Procfile` specifies how the application should be run. For this Flask app, the `Procfile` contains:
+```
+web: gunicorn app:app
+```
+
+---
+
+### 6. Define Dependencies in `requirements.txt`
+List all the required Python libraries. For example:
+```
+Flask==3.1.0
+gunicorn==23.0.0
+pandas==2.2.3
+openai==1.59.7
+```
+
+---
+
+### 7. Deploy to Render
+1. Log in to Render.
+2. Connect your GitHub repository to Render.
+3. Render will:
+   - Clone the repository.
+   - Install dependencies from `requirements.txt`.
+   - Use the `Procfile` to run the application.
+
+---
+
+### 8. Monitor Deployment Logs
+Use the Render dashboard to monitor the build and deployment process. For example:
+```
+==> Uploading build...
+==> Build uploaded in 8s
+==> Build successful 🎉
+==> Deploying...
+==> Running 'gunicorn app:app'
+```
+
+---
+
+### 9. Access the Application
+Once deployed, access the application at the provided URL. Example:
+- **Current Website**: [Patient Portal](#)
+
+---
+
+## Additional Notes
+- The project uses the `main` branch to track and push all updates.
+- Changes to files can be committed and pushed as needed for incremental improvements.
+
+---
+
+Feel free to edit this guide or add more instructions based on new features or configurations!
+

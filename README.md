@@ -160,7 +160,4 @@ Once deployed, access the application at the provided URL. Example:
 - The project uses the `main` branch to track and push all updates.
 - Changes to files can be committed and pushed as needed for incremental improvements.
 
----
-
-Feel free to edit this guide or add more instructions based on new features or configurations!
 

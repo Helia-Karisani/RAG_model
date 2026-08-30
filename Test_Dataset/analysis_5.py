@@ -7,7 +7,7 @@ from openai import OpenAI
 
 # Initialize OpenAI client
 client = OpenAI(
-    api_key="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"
+    api_key= WRITE YOUR KEY HERE
 )
 
 if __name__ == "__main__":

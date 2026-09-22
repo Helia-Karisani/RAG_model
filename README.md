@@ -143,7 +143,7 @@ Use the Render dashboard to monitor the build and deployment process. For exampl
 ```
 ==> Uploading build...
 ==> Build uploaded in 8s
-==> Build successful 🎉
+==> Build successful 
 ==> Deploying...
 ==> Running 'gunicorn app:app'
 ```
